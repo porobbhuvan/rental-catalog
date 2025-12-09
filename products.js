@@ -1,5 +1,80 @@
 // products.js
 const rentalProducts = [
+    // --- 1. Chiavari Chair (Golden) ---
+    {
+        id: 'chair001',
+        category: 'Chairs',
+        name: 'Golden Chiavari Chair',
+        price: 7, // Base price per day
+        image: 'images/chiavari chair-golden.jpeg', 
+        
+        // --- Detail Fields ---
+        description: 'Elegant golden finish Chiavari chair, perfect for weddings, banquets, and upscale events. Lightweight and stackable.',
+        dimensions: '40cm W x 92cm H x 46cm D',
+        extra_images: ['images/chiavari chair-white.jpeg'], // Using the white one as an alternate view
+        extra_charges: {
+            item: 'Padded Seat Cushion',
+            cost: 2, // Extra $2 per day for cushion
+            options: ['Ivory', 'White', 'Black'],
+        },
+        rental_type: 'Per Piece / Day',
+    },
+    
+    // --- 2. Chiavari Chair (White) ---
+    {
+        id: 'chair002',
+        category: 'Chairs',
+        name: 'White Chiavari Chair',
+        price: 7,
+        image: 'images/chiavari chair-white.jpeg',
+        
+        // --- Detail Fields ---
+        description: 'Classic white Chiavari chair, ideal for outdoor ceremonies and formal gatherings. Easy to clean plastic resin construction.',
+        dimensions: '40cm W x 92cm H x 46cm D',
+        extra_images: ['images/chiavari chair-golden.jpeg'], // Using the golden one as an alternate view
+        extra_charges: {
+            item: 'Padded Seat Cushion',
+            cost: 2,
+            options: ['Ivory', 'White', 'Black'],
+        },
+        rental_type: 'Per Piece / Day',
+    },
+
+    // --- 3. Traditional Banquet Chair ---
+    {
+        id: 'chair003',
+        category: 'Chairs',
+        name: 'Red Padded Banquet Chair',
+        price: 4,
+        image: 'images/banquet chair.jpeg',
+        
+        // --- Detail Fields ---
+        description: 'Standard stacking banquet chair with durable golden frame and comfortable red padded cushion. Suitable for conferences and indoor dining.',
+        dimensions: '45cm W x 94cm H x 50cm D',
+        extra_images: [],
+        extra_charges: null, // Price includes the padding
+        rental_type: 'Per Piece / Day',
+    },
+    
+    // --- 4. Standard Plastic Chair ---
+    {
+        id: 'chair004',
+        category: 'Chairs',
+        name: 'Standard Plastic Chair (Brown)',
+        price: 1,
+        image: 'images/plastic chair.jpeg',
+
+        // --- Detail Fields ---
+        description: 'Simple, heavy-duty plastic chair for casual use, large crowds, or outdoor seating. Very durable and highly stackable.',
+        dimensions: '45cm W x 85cm H x 50cm D',
+        extra_images: [],
+        extra_charges: {
+            item: 'Disposable White Cover',
+            cost: 0.50, // Extra $0.50 for a cover
+            options: ['White'],
+        },
+        rental_type: 'Per Piece / Day',
+    },
     {
         id: 'cam101',
         category: 'Electronics',

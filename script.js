@@ -21,7 +21,7 @@ function createProductCard(product) {
             <div class="card-details">
                 <h4>${product.name}</h4>
                 <p class="description">${product.description.substring(0, 50)}...</p>
-                <p class="price">**\$${product.price} / ${product.rental_type}**</p>
+                <p class="price">**\₹${product.price} / ${product.rental_type}**</p>
             </div>
         </div>
     `;
@@ -190,7 +190,7 @@ function renderProductDetails(product) {
             <div class="info-side">
                 <h2>${product.name}</h2>
                 <p class="price-big">
-                    \$${product.price} <span>/ ${product.rental_type}</span>
+                    \₹${product.price} <span>/ ${product.rental_type}</span>
                 </p>
                 
                 <p class="full-description">${product.description}</p>
