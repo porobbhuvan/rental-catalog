@@ -351,3 +351,12 @@ header {
         padding: 15px;
     }
 }
+/* Refinement for stacked radio options */
+.options .option-item {
+    margin-bottom: 8px;
+    padding: 5px 0;
+    border-bottom: 1px dotted var(--border-color);
+}
+.options .option-item:last-child {
+    border-bottom: none;
+}

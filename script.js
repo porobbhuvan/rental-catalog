@@ -21,7 +21,7 @@ function createProductCard(product) {
             <div class="card-details">
                 <h4>${product.name}</h4>
                 <p class="description">${product.description.substring(0, 50)}...</p>
-                <p class="price">**\₹${product.price} / ${product.rental_type}**</p>
+                <p class="price">**\₹ ${product.price}  ${product.rental_type}**</p>
             </div>
         </div>
     `;
@@ -148,15 +148,27 @@ function renderProductDetails(product) {
     let extraChargesHTML = '';
     if (product.extra_charges) {
         const charge = product.extra_charges;
-        const optionsHTML = charge.options.map(option => 
-            `<input type="radio" id="${product.id}-${option}" name="extra-option" value="${option}">
-             <label for="${product.id}-${option}">${option}</label>`
-        ).join('');
+        
+        // We explicitly define the two options to control which is selected by default
+        const optionsHTML = `
+            <div class="option-item">
+                <input type="radio" id="${product.id}-cover-yes" name="extra-option" value="Yes" checked>
+                <label for="${product.id}-cover-yes">
+                    ${charge.options[0]} (+\$${charge.cost}) 
+                </label>
+            </div>
+            <div class="option-item">
+                <input type="radio" id="${product.id}-cover-no" name="extra-option" value="No">
+                <label for="${product.id}-cover-no">
+                    ${charge.options[1]} (Base Price)
+                </label>
+            </div>
+        `;
 
         extraChargesHTML = `
             <div class="extra-charges-section">
-                <h4>Optional Add-on: ${charge.item}</h4>
-                <p class="extra-price">+\$${charge.cost} / ${product.rental_type}</p>
+                <h4>Add-on Option: ${charge.item}</h4>
+                <p class="extra-price">Chair Base Price: \$${product.price} / ${product.rental_type}</p>
                 <div class="options">
                     ${optionsHTML}
                 </div>
@@ -190,7 +202,7 @@ function renderProductDetails(product) {
             <div class="info-side">
                 <h2>${product.name}</h2>
                 <p class="price-big">
-                    \₹${product.price} <span>/ ${product.rental_type}</span>
+                    \₹ ${product.price} <span> ${product.rental_type}</span>
                 </p>
                 
                 <p class="full-description">${product.description}</p>
