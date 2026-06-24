@@ -364,7 +364,7 @@ const rentalProducts = [
         category: 'Event Supplies',
         name: 'Stainless Steel 3-Seater VIP Event Sofa',
         price: "Enquire",
-        image: 'images/sofa.jpg',
+        image: 'images/sofa.png',
         
         // --- Detail Fields ---
         description: 'Premium 3-seater event stage sofa featuring a heavy-duty, polished stainless steel structural frame with modern slatted accents on the backrest and sturdy tubular armrests. Outfitted with comfortable, dense foam cushions wrapped in sleek white faux-leather tufted upholstery featuring elegant button-back detailing. Excellent for VIP stage seating, wedding couple lounges, corporate award ceremonies, and high-profile guest reception areas.',
@@ -433,7 +433,7 @@ const rentalProducts = [
         extra_charges: null, 
         rental_type: 'Per Piece',
     },
-    
+
 
 ];
 
