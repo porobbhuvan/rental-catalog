@@ -3,41 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store Name - Rental Catalog</title>
+    <title>Porob Decorators - Event Rentals in Goa</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body data-theme="dark">
 
+    <!-- Header / Nav Bar -->
     <header>
-        <div class="logo">Porob Decorators</div>
-        <div class="search-container">
-            <input type="search" id="search-bar" placeholder="Search products (by name or description)...">
-        </div>
+        <div class="logo" onclick="switchPage('home')">Porob Decorators</div>
+        <nav class="main-nav">
+            <a href="#" id="nav-home" onclick="switchPage('home')" class="active">Home</a>
+            <a href="#" id="nav-catalog" onclick="switchPage('catalog')">Product Line</a>
+            <a href="#" id="nav-about" onclick="switchPage('about')">About Us</a>
+            <a href="#" id="nav-contact" onclick="switchPage('contact')">Contact Us</a>
+        </nav>
         <button id="theme-toggle">
             <i class="fas fa-sun"></i> 
         </button>
     </header>
 
-    <div class="container">
-        
-        <aside class="sidebar">
-            <h3>Categories</h3>
-            <input type="search" id="sidebar-search" placeholder="Search categories..." class="sidebar-search-input"> 
-            <nav id="category-nav">
-                </nav>
-        </aside>
+    <!-- Content Sections Wrapper -->
+    <div class="page-content">
 
-        <div class="main-content-area">
+        <!-- 1. HOME PAGE VIEW -->
+        <section id="page-home" class="spa-page">
+            <div class="hero-section">
+                <h1>Crafting Beautiful Events Across Goa</h1>
+                <p>Premium chairs, luxury sofas, traditional lamps, tents, and commercial kitchenware rentals for weddings, corporate events, and religious gatherings.</p>
+                <button class="cta-btn" onclick="switchPage('catalog')">Explore Our Product Line</button>
+            </div>
             
-            <main class="product-gallery" id="product-gallery">
-                </main>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-truck"></i>
+                    <h3>All-Goa Delivery</h3>
+                    <p>From Panaji to Margao, we bring premium rental setups right to your event venue.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-couch"></i>
+                    <h3>Massive Inventory</h3>
+                    <p>An extensive, well-maintained selection of furniture, ceremonial items, and catering gear.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Family Managed</h3>
+                    <p>Proudly serving Goa with dependable event infrastructure across generations.</p>
+                </div>
+            </div>
+        </section>
 
-            <section id="product-detail-view" style="display: none;">
-                </section>
-        </div>
+        <!-- 2. PRODUCT LINE VIEW (Our previous core catalog setup) -->
+        <section id="page-catalog" class="spa-page" style="display: none;">
+            <!-- Secondary header block for catalog search tools -->
+            <div class="catalog-header-bar">
+                <div class="search-container">
+                    <input type="search" id="search-bar" placeholder="Search product name or description...">
+                </div>
+            </div>
+            
+            <div class="container">
+                <aside class="sidebar">
+                    <h3>Categories</h3>
+                    <input type="search" id="sidebar-search" placeholder="Search categories..." class="sidebar-search-input"> 
+                    <nav id="category-nav">
+                        <!-- Category links will be dynamically injected here -->
+                    </nav>
+                </aside>
+
+                <div class="main-content-area">
+                    <main class="product-gallery" id="product-gallery">
+                        <!-- Product cards are generated here -->
+                    </main>
+                    <div id="product-detail-view" style="display: none;">
+                        <!-- Product details are generated here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. ABOUT US PAGE VIEW -->
+        <section id="page-about" class="spa-page" style="display: none;">
+            <div class="about-container">
+                <h2>The Porob Decorators Story</h2>
+                <div class="about-content">
+                    <p>Based out of the heart of Goa, <strong>Porob Decorators</strong> is a premier, trusted event infrastructure rental house. Owned and personally managed by <strong>Prasad Shambhu Porob and family</strong>, our business has built a foundational reputation for dependability, premium stock maintenance, and flawless timely execution.</p>
+                    <p>We understand that every celebration—be it an intimate traditional wedding, a grand corporate seminar, a lively beachside cocktail hour, or a sacred religious ceremony—demands pristine event rentals. Our closely-knit family operations ensure personalized attention to every client request, helping event planners and families bring their visions to life flawlessly all over Goa.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. CONTACT US PAGE VIEW -->
+        <section id="page-contact" class="spa-page" style="display: none;">
+            <div class="contact-container">
+                <h2>Get in Touch for Pricing & Bookings</h2>
+                <p>Have an upcoming event? Browse our Product Line, select your variants, and reach out directly to our family office for personalized booking quotes.</p>
+                
+                <div class="contact-methods">
+                    <a href="tel:+911234567890" class="contact-card-btn">
+                        <i class="fas fa-phone-alt"></i>
+                        <h3>Call Office</h3>
+                        <p>+91 12345 67890</p>
+                    </a>
+                    
+                    <a href="https://wa.me/911234567890" target="_blank" class="contact-card-btn whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                        <h3>WhatsApp Us</h3>
+                        <p>Chat Live Instantly</p>
+                    </a>
+                    
+                    <div class="contact-card-btn location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Our Location</h3>
+                        <p>Goa, India</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </div>
 
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Porob Decorators. All Rights Reserved. Managed by Prasad Shambhu Porob & Family.</p>
+    </footer>
+
+    <!-- Scripts -->
     <script src="products.js"></script>
     <script src="script.js"></script>
 </body>

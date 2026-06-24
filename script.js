@@ -1,6 +1,31 @@
 // script.js
 
-// --- DOM Elements ---
+// --- SPA Page Navigation Module ---
+function switchPage(pageId) {
+    // 1. Hide all main routing pages
+    document.querySelectorAll('.spa-page').forEach(page => {
+        page.style.display = 'none';
+    });
+
+    // 2. Remove active class markers from nav links
+    document.querySelectorAll('.main-nav a').forEach(link => {
+        link.classList.remove('active');
+    });
+
+    // 3. Mount targeted page view
+    document.getElementById(`page-${pageId}`).style.display = pageId === 'catalog' ? 'block' : 'block';
+    if(pageId === 'catalog') {
+        navigateTo('list'); // Reset view back to primary grid list
+    }
+
+    // 4. Highlight current navigation tab
+    const activeLink = document.getElementById(`nav-${pageId}`);
+    if(activeLink) activeLink.classList.add('active');
+
+    window.scrollTo(0, 0);
+}
+
+// --- DOM Target Elements ---
 const galleryView = document.getElementById('product-gallery');
 const detailView = document.getElementById('product-detail-view');
 const categoryNav = document.getElementById('category-nav');
@@ -8,20 +33,16 @@ const globalSearchBar = document.getElementById('search-bar');
 const sidebarSearch = document.getElementById('sidebar-search');
 const themeToggle = document.getElementById('theme-toggle');
 const body = document.body;
-let currentProducts = rentalProducts; // Array currently being displayed
 
-// --- 1. Product Rendering and Filtering Logic ---
-
+// --- Catalog Rendering Engine ---
 function createProductCard(product) {
-    // Card now has an onclick handler for SPA navigation
     return `
-        <div class="product-card" onclick="navigateTo('detail', '${product.id}')" 
-             data-category="${product.category}" data-name="${product.name.toLowerCase()}">
+        <div class="product-card" onclick="navigateTo('detail', '${product.id}')">
             <img src="${product.image}" alt="${product.name}">
             <div class="card-details">
                 <h4>${product.name}</h4>
-                <p class="description">${product.description.substring(0, 50)}...</p>
-                <p class="price">**\₹ ${product.price}  ${product.rental_type}**</p>
+                <p class="description">${product.description.substring(0, 75)}...</p>
+                <p class="price">${product.price}</p>
             </div>
         </div>
     `;
@@ -29,244 +50,125 @@ function createProductCard(product) {
 
 function renderProducts(productsToRender) {
     galleryView.innerHTML = '';
-    
     if (!productsToRender || productsToRender.length === 0) {
-        galleryView.innerHTML = '<p style="padding: 20px;">No products found matching your criteria.</p>';
+        galleryView.innerHTML = '<p style="padding: 20px;">No matches found within our inventory line.</p>';
         return;
     }
-
-    let productHTML = '';
-    productsToRender.forEach(product => {
-        productHTML += createProductCard(product);
-    });
-    
-    galleryView.innerHTML = productHTML;
-    currentProducts = productsToRender; // Update current products list
+    let htmlPool = '';
+    productsToRender.forEach(prod => { htmlPool += createProductCard(prod); });
+    galleryView.innerHTML = htmlPool;
 }
 
-// --- 2. Category Filtering ---
-
+// --- Sidebar Filtering ---
 function createCategoryLinks() {
     categoryNav.innerHTML = '';
-
     categories.forEach(cat => {
         const link = document.createElement('a');
         link.href = '#';
         link.textContent = cat;
-        link.style.display = 'block'; 
-        
-        if (cat === 'View All') {
-            link.classList.add('active');
-        }
+        if (cat === 'View All') link.classList.add('active');
 
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            filterByCategory(cat);
-            
-            // Update active link class
             categoryNav.querySelectorAll('a').forEach(a => a.classList.remove('active'));
             link.classList.add('active');
-            
-            // Clear global search bar
+            filterByCategory(cat);
             globalSearchBar.value = '';
         });
-
         categoryNav.appendChild(link);
     });
 }
 
 function filterByCategory(category) {
-    let filteredProducts = rentalProducts;
-
-    if (category !== 'View All') {
-        filteredProducts = rentalProducts.filter(product => product.category === category);
-    }
-    
-    renderProducts(filteredProducts);
+    const subset = category === 'View All' ? rentalProducts : rentalProducts.filter(p => p.category === category);
+    renderProducts(subset);
 }
 
-// --- 3. Search Bar Functionality ---
-
+// --- Live Filtering Core ---
 globalSearchBar.addEventListener('keyup', () => {
-    const searchText = globalSearchBar.value.toLowerCase().trim();
-    
-    // Deactivate category links when global search is used
+    const query = globalSearchBar.value.toLowerCase().trim();
     categoryNav.querySelectorAll('a').forEach(a => a.classList.remove('active'));
-
-    const searchResults = rentalProducts.filter(product => 
-        product.name.toLowerCase().includes(searchText) || 
-        product.description.toLowerCase().includes(searchText)
-    );
-    
-    renderProducts(searchResults);
+    const hits = rentalProducts.filter(p => p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query));
+    renderProducts(hits);
 });
 
-// --- Sidebar Search (Category Filter) Functionality ---
 sidebarSearch.addEventListener('keyup', () => {
-    const searchText = sidebarSearch.value.toLowerCase().trim();
-    const links = categoryNav.querySelectorAll('a');
-
-    links.forEach(link => {
-        const linkText = link.textContent.toLowerCase();
-        
-        if (linkText.includes(searchText)) {
-            link.style.display = 'block';
-        } else {
-            link.style.display = 'none';
-        }
+    const query = sidebarSearch.value.toLowerCase().trim();
+    categoryNav.querySelectorAll('a').forEach(link => {
+        link.style.display = link.textContent.toLowerCase().includes(query) ? 'block' : 'none';
     });
 });
 
-
-// --- 4. Single Page Application (SPA) Routing & Details ---
-
+// --- Dynamic Product View Switching ---
 function navigateTo(view, productId = null) {
-    // 1. Hide both views
-    galleryView.style.display = 'none';
-    detailView.style.display = 'none';
-
-    // 2. Show the requested view
     if (view === 'list') {
-        galleryView.style.display = 'grid'; 
+        detailView.style.display = 'none';
+        galleryView.style.display = 'grid';
     } else if (view === 'detail' && productId) {
-        const product = rentalProducts.find(p => p.id === productId);
-        if (product) {
-            renderProductDetails(product);
+        const match = rentalProducts.find(p => p.id === productId);
+        if (match) {
+            renderProductDetails(match);
+            galleryView.style.display = 'none';
             detailView.style.display = 'block';
-            window.scrollTo(0, 0); // Scroll to top of page
+            window.scrollTo(0, 0);
         }
     }
 }
 
-// Global function to return to the catalog
-window.goBack = function() {
-    navigateTo('list');
-}
-
 function renderProductDetails(product) {
-    // --- Extra Charges HTML ---
-    let extraChargesHTML = '';
+    let variantsHTML = '';
     if (product.extra_charges) {
-        const charge = product.extra_charges;
-        
-        // We explicitly define the two options to control which is selected by default
-        const optionsHTML = `
-            <div class="option-item">
-                <input type="radio" id="${product.id}-cover-yes" name="extra-option" value="Yes" checked>
-                <label for="${product.id}-cover-yes">
-                    ${charge.options[0]} (+\$${charge.cost}) 
-                </label>
-            </div>
-            <div class="option-item">
-                <input type="radio" id="${product.id}-cover-no" name="extra-option" value="No">
-                <label for="${product.id}-cover-no">
-                    ${charge.options[1]} (Base Price)
-                </label>
-            </div>
-        `;
-
-        extraChargesHTML = `
+        const info = product.extra_charges;
+        variantsHTML = `
             <div class="extra-charges-section">
-                <h4>Add-on Option: ${charge.item}</h4>
-                <p class="extra-price">Chair Base Price: \$${product.price} / ${product.rental_type}</p>
+                <h4>Add-on Selection / Size Lineup:</h4>
+                <p class="extra-price">${info.item} Option (${info.cost})</p>
                 <div class="options">
-                    ${optionsHTML}
+                    ${info.options.map((opt, i) => `<label><input type="radio" name="detail-opt" ${i===0?'checked':''}> ${opt}</label><br>`).join('')}
                 </div>
             </div>
         `;
     }
 
-    // --- Extra Images HTML ---
-    // Start with the main image in the thumbnail row
-    const allImages = [product.image, ...product.extra_images];
-    const extraImagesHTML = allImages.map(imgSrc => 
-        `<img src="${imgSrc}" alt="${product.name} alternate view" 
-              class="thumb-image" 
-              onclick="document.getElementById('main-img').src='${imgSrc}'">`
-    ).join('');
-    
-    // --- Construct the full detail page HTML ---
-    const detailHTML = `
-        <button class="back-button" onclick="goBack()">
-            <i class="fas fa-arrow-left"></i> Back to Catalog
+    const imgs = [product.image, ...product.extra_images].filter(Boolean);
+
+    detailView.innerHTML = `
+        <button class="back-button" onclick="navigateTo('list')">
+            <i class="fas fa-arrow-left"></i> Return to Product Line
         </button>
-        
         <div class="detail-container">
             <div class="gallery-side">
-                <img src="${product.image}" alt="${product.name}" class="main-detail-image" id="main-img">
+                <img src="${product.image}" id="view-large-img" class="main-detail-image" alt="Product Image">
                 <div class="extra-images-row">
-                    ${extraImagesHTML}
+                    ${imgs.map(i => `<img src="${i}" class="thumb-image" onclick="document.getElementById('view-large-img').src='${i}'">`).join('')}
                 </div>
             </div>
-
             <div class="info-side">
                 <h2>${product.name}</h2>
-                <p class="price-big">
-                    \₹ ${product.price} <span> ${product.rental_type}</span>
-                </p>
-                
-                <p class="full-description">${product.description}</p>
-                
+                <div class="price-big">${product.price}</div>
+                <p style="margin-bottom:20px; line-height:1.6;">${product.description}</p>
                 <div class="spec-block">
-                    <h4>Key Specifications</h4>
                     <ul>
-                        <li><i class="fas fa-ruler-combined"></i> **Dimensions:** ${product.dimensions}</li>
-                        <li><i class="fas fa-tag"></i> **Category:** ${product.category}</li>
+                        <li><strong>Dimensions:</strong> ${product.dimensions}</li>
+                        <li><strong>Base Allocation Unit:</strong> ${product.rental_type}</li>
                     </ul>
                 </div>
-                
-                ${extraChargesHTML}
-                
-                <button class="rent-button">Request to Rent This Item</button>
+                ${variantsHTML}
+                <a href="tel:+911234567890" class="rent-button"><i class="fas fa-phone-alt"></i> Contact to Enquire</a>
             </div>
         </div>
     `;
-
-    detailView.innerHTML = detailHTML;
 }
 
-
-// --- 5. Dark Mode Toggle ---
-
-function toggleDarkMode() {
-    const currentTheme = body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    body.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    
-    // Update the button icon
-    themeToggle.innerHTML = newTheme === 'dark' 
-        ? '<i class="fas fa-sun"></i>' 
-        : '<i class="fas fa-moon"></i>'; 
-}
-
-function initializeTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    let initialTheme = 'dark'; // Default to dark as requested
-    if (savedTheme) {
-        initialTheme = savedTheme;
-    } else if (!prefersDark) {
-        initialTheme = 'light';
-    }
-
-    body.setAttribute('data-theme', initialTheme);
-    
-    // Set the initial icon
-    themeToggle.innerHTML = initialTheme === 'dark' 
-        ? '<i class="fas fa-sun"></i>' 
-        : '<i class="fas fa-moon"></i>';
-}
-
-
-// --- INITIALIZATION ---
-document.addEventListener('DOMContentLoaded', () => {
-    initializeTheme(); 
-    createCategoryLinks(); 
-    renderProducts(rentalProducts); 
+// --- Dark Mode Switch Engine ---
+themeToggle.addEventListener('click', () => {
+    const activeTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    body.setAttribute('data-theme', activeTheme);
+    themeToggle.innerHTML = activeTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
 });
 
-// Event listener for the theme button
-themeToggle.addEventListener('click', toggleDarkMode);
+// --- Boot Application Context ---
+document.addEventListener('DOMContentLoaded', () => {
+    createCategoryLinks();
+    renderProducts(rentalProducts);
+});
