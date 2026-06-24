@@ -205,12 +205,42 @@ header {
 
 .sidebar-search-input {
     width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
+    padding: 12px 16px;
+    font-size: 0.95em;
+    border: 2px solid var(--border-color);
+    border-radius: 8px; /* Elegant, subtly rounded corners */
+    background-color: var(--bg-color); /* Light contrast against the sidebar card background */
+    color: var(--text-color);
+    margin-bottom: 20px;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+/* Clean border shift when searching categories */
+.sidebar-search-input:focus {
+    border-color: var(--accent-color);
+    background-color: var(--card-bg); /* Subtle swap to pop out visually */
+}
+
+#search-bar {
+    width: 100%;
+    max-width: 500px; /* Makes it wider and more prominent */
+    padding: 14px 20px; /* Thicker, more substantial feel */
+    font-size: 1.05em;
+    border: 2px solid var(--border-color); /* Cleaner, thicker border */
+    border-radius: 30px; /* Beautiful pill-shaped design */
     background-color: var(--card-bg);
     color: var(--text-color);
-    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease; /* Smooth animation for focus */
+    outline: none;
+}
+
+/* Captivating interactive glow effect when clicked */
+#search-bar:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 20px rgba(0, 188, 212, 0.25);
+    transform: translateY(-1px);
 }
 
 .sidebar nav a {
